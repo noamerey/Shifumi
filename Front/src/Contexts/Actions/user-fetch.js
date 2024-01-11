@@ -6,14 +6,15 @@ const API_URL = 'http://fauques.freeboxos.fr:3000';
 export async function loginUser(username, password) {
   try {
     const response = await axios.post(`${API_URL}/login`, { username, password });
-    if (response.data.success) {
+    if (response.data.token) {
       saveToLocalStorage(response.data.token, username);
       return { status: 'success', data: response.data };
     } else {
+      console.error('Login failed with response:', response.data);
       throw new Error('Login failed');
     }
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('Login error:', error.response ? error.response.data : error);
     return { status: 'error', message: error.message };
   }
 }

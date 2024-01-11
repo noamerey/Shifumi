@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../serverlink/user'; // Assuming user.js is in the same directory
+import { loginUser } from '../Contexts/Actions/user-fetch'; // Assuming user.js is in the same directory
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -15,8 +15,15 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await loginUser(username, password);
-      navigate('/matchlist');
+      const response = await loginUser(username, password);
+      if (response.status === 'success') {
+        localStorage.setItem('userToken', response.token);
+        localStorage.setItem('username', username);
+        navigate('/matchlist');
+      } else {
+        console.error('Login error:', response.error);
+        setError('Impossible de se connecter');
+      }
     } catch (error) {
       console.error('Login error:', error);
       setError('Impossible de se connecter');
