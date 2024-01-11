@@ -1,52 +1,39 @@
+import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
-export const loginUser = async (username, password) => {
-    try {
-      const response = await fetch('http://fauques.freeboxos.fr:3000/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        saveTokenAndUsernameToLocalStorage(data.token, username);
-        return data.token;
-      } else {
-        throw new Error('Login failed');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      throw error;
-    }
-};
+const API_URL = 'http://fauques.freeboxos.fr:3000';
 
-export const registerUser = async (username, password) => {
-    const idUser = uuidv4();
-    try {
-      const response = await fetch('http://fauques.freeboxos.fr:3000/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id_: idUser, username, password }),
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        return data.token;
-      } else {
-        throw new Error('Register failed');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      throw error;
+export async function loginUser(username, password) {
+  try {
+    const response = await axios.post(`${API_URL}/login`, { username, password });
+    if (response.data.success) {
+      saveToLocalStorage(response.data.token, username);
+      return { status: 'success', data: response.data };
+    } else {
+      throw new Error('Login failed');
     }
-};
+  } catch (error) {
+    console.error('Login error:', error);
+    return { status: 'error', message: error.message };
+  }
+}
 
-const saveTokenAndUsernameToLocalStorage = (token, username) => {
+export async function registerUser(username, password) {
+  const idUser = uuidv4();
+  try {
+    const response = await axios.post(`${API_URL}/register`, { id_: idUser, username, password });
+    if (response.data.success) {
+      return { status: 'success', data: response.data };
+    } else {
+      throw new Error('Registration failed');
+    }
+  } catch (error) {
+    console.error('Registration error:', error);
+    return { status: 'error', message: error.message };
+  }
+}
+
+function saveToLocalStorage(token, username) {
   localStorage.setItem('userToken', token);
   localStorage.setItem('username', username);
-};
+}
