@@ -8,7 +8,7 @@ export default function Footer() {
         backgroundImage: `url(${pokemonImage})`,
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        backgroundSize: '50%',
+        backgroundSize: '30%',
     };
 
     return<>
