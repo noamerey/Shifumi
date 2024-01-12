@@ -1,10 +1,11 @@
 // HomePage.jsx
 import React from 'react';
-import Footer from './Footer';
-import feu from '../assets/salameche.png';
-import plante from '../assets/bulbizarre.png';
-import eau from '../assets/carapuce.png';
-import './Stylehomepage/HomePage.css';
+import Header from './Header.jsx';
+import Footer from './Footer.jsx';
+import feu from '../../assets/salameche.png';
+import plante from '../../assets/bulbizarre.png';
+import eau from '../../assets/carapuce.png';
+import '../Stylehomepage/HomePage.css';
 
 export default function HomePage() {
     const gameRules = [
