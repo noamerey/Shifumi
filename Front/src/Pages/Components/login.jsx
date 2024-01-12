@@ -20,8 +20,6 @@ function Login() {
     try {
       const response = await loginUser(username, password);
       if (response.status === 'success') {
-        localStorage.setItem('userToken', response.token);
-        localStorage.setItem('username', username);
         navigate('/matchlist');
       } else {
         console.error('Login error:', response.error);

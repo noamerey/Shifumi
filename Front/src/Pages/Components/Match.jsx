@@ -1,44 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import matchlist from '../../Contexts/Actions/matchlist';
+import { useNavigate } from 'react-router-dom';
 import Header from './Header';
-import Footer from './Footer';
 import './Style/login.css';
-
-
+import Footer from './Footer';
 
 function Match() {
+  const [matchId, setMatchId] = useState(null);
   const [matches, setMatches] = useState([]);
-  const [newMatch, setNewMatch] = useState({});
+  const navigate = useNavigate();
 
-  // Fetch matches when component mounts
-  useEffect(() => {
-    axios.get('http://fauques.freeboxos.fr:3000/matches')
-      .then(response => {
-        setMatches(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error!', error);
-      });
-  }, []);
+  const createMatch = async () => {
+    const id = await matchlist.add();
+    setMatchId(id);
+    navigate(`/match/${id}`);
+  };
 
-  // Function to handle form submission
-  const handleSubmit = event => {
-    event.preventDefault();
-  
-    const userToken = localStorage.getItem('userToken');
-  
-    axios.post('http://fauques.freeboxos.fr:3000/matches', newMatch, {
-      headers: {
-        Authorization: `Bearer ${userToken}`
-      }
-    })
-      .then(response => {
-
-        setMatches([...matches, response.data]);
-      })
-      .catch(error => {
-        console.error('There was an error!', error);
-      });
+  const joinMatch = async () => {
+    const match = matches.find(match => match.user2 === null);
+    if (match) {
+      await matchlist.join(match._id);
+      setMatchId(match._id);
+      navigate(`/match/${match._id}`);
+    } else {
+      createMatch();
+    }
   };
 
   const handleLogout = () => {
@@ -47,30 +33,26 @@ function Match() {
     navigate('/login');
   };
 
+  useEffect(() => {
+    const getMatches = async () => {
+      const data = await matchlist.fetch();
+      setMatches(data);
+    };
+
+    getMatches();
+  }, []);
+
   return (
     <div className="page-container">
-      <Header />
-      <div className="content-wrap">
-        <h1>Matches</h1>
-        {matches.map(match => (
-          <div key={match._id}>
-            <p>User 1: {match.user1.username}</p>
-            <p>User 2: {match.user2 ? match.user2.username : 'N/A'}</p>
-          </div>
-        ))}
-
-        <h2>Create a new match</h2>
-        <form onSubmit={handleSubmit}>
-          <label>
-            User 1:
-            <input type="text" name="user1" onChange={e => setNewMatch({ ...newMatch, user1: e.target.value })} />
-          </label>
-          <button type="submit" className="btn">Create</button> {/* Apply the login-button class */}
-          <button onClick={handleLogout} className="btn">Déconnexion</button> {/* Apply the login-button class */}
-        </form>
+      <div className="content-wrapper">
+        <Header />
+        <h1>Match List</h1>
+        <button className='btn' type='button' onClick={joinMatch}>Rejoindre un match</button>
+        <button className="btn" type='button' onClick={handleLogout}>Se déconnecter</button>
       </div>
       <Footer />
     </div>
   );
-}
+};
+
 export default Match;
