@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import Header from './Header.jsx';
+import Footer from './Footer';
 import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../Contexts/Actions/user-fetch'; // Assuming user.js is in the same directory
+import { loginUser } from '../../Contexts/Actions/user-fetch'; // Assuming user.js is in the same directory
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -31,6 +33,11 @@ function Login() {
   };
 
   return (
+
+    <>
+    <Header />
+
+
     <div>
       <h1>Login Page</h1>
       {error && <p>{error}</p>}
@@ -47,6 +54,9 @@ function Login() {
       </form>
       <button type="button" onClick={goToRegister}>Go to Register</button>
     </div>
+
+    <Footer />
+    </>
   );
 }
 

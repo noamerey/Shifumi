@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { registerUser } from '../Contexts/Actions/user-fetch'; // Assuming user.js is in the same directory
+import { registerUser } from '../../Contexts/Actions/user-fetch'; // Assuming user.js is in the same directory
+import Header from './Header.jsx';
+import Footer from './Footer.jsx';
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -26,6 +28,9 @@ function Register() {
   };
 
   return (
+
+    <>
+    <Header />
     <div>
       <h1>Register Page</h1>
       {errorMessage && <p>{errorMessage}</p>}
@@ -49,6 +54,8 @@ function Register() {
         </form>
       )}
     </div>
+    <Footer />
+    </>
   );
 }
 

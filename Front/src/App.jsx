@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import './App.css';
-import Login from './components/login';
-import CreateAccount from './components/CreateAccount';
-import Match from './components/Match';
+import HomePage from './Pages/Components/HomePage';
+import Login from './Pages/Components/login';
+import CreateAccount from './Pages/Components/CreateAccount';
+import Match from './Pages/Components/Match';
 
 function App() {
   const [username, setUsername] = useState('');
@@ -22,6 +23,7 @@ function App() {
     <Router>
       <div>
         <Routes>
+          <Route path="/" element={<HomePage/>}/>
           <Route path="/login" element={<Login setUsername={setUsername}/>}/>
           <Route path="/register" element={<CreateAccount/>}/>
           <Route path="/matchlist" element={<PrivateRoute><Match/></PrivateRoute>}/>
