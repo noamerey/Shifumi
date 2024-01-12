@@ -17,7 +17,6 @@
     display: inline-block;
     width: 100px;
     height: 100px;
-    background-color: #f00;
     color: #000000;
     text-align: center;
     line-height: 100px;
@@ -25,9 +24,7 @@
     border-radius: 50%; 
 }
 
-.animated-button:hover {
-    background-color: rgb(0, 17, 255);
-}
+
 
 .main-button:hover{
     background-color: rgb(32, 32, 32);
@@ -36,15 +33,7 @@
     transition: all 0.3s;
 }
 
-.link-button-play{
-    color: rgb(7, 7, 7);
-    transition: all 0.3s
-}
 
-.link-button-play:hover{
-    color: rgb(19, 19, 25);
-    transition: all 0.3s;
-}
 .title{
     font-size: 100px;
     background: linear-gradient(to right, rgb(255, 0, 0), rgb(0, 255, 0), rgb(0, 0, 255));
@@ -79,24 +68,8 @@
     text-align: center;
 }
 
-.regles-alignement{
-    display: flex;
-    justify-content: space-between;
-    gap: 30px;
-    flex-wrap: wrap;
-    text-align: center;
-}
 
-.logo-chifoumi img{
-    width: 300px;
-    height: 190px;
-}
 
-.title-regle{
-    font-size: 20px;
-    font-weight: 700;
-    text-align: center;
-}
 .circle {
     position: relative;
     width: 750px; 
@@ -137,21 +110,30 @@
 }
 
 .logo-chifoumi .logo, .regles .logo {
-    width: 300px;
-    height: 190px;
+    width: 230px;
+    height: 230px;
+    
 }
 
 .logo0:hover {
     filter: drop-shadow(0 0 2em #fd0000aa);
+    animation: logo-spin 5s infinite linear;
+    
 }
 
 .logo2:hover {
     filter: drop-shadow(0 0 2em #00ff00aa);
+    animation: logo-spin 5s infinite linear;
 }
 
 .logo1:hover {
     filter: drop-shadow(0 0 2em #00c3ffaa);
+    animation: logo-spin 5s infinite linear;
 }
+.logo0, .logo1, .logo2 {
+    width: 300px;  
+    height: 300px; 
+  }
 
 .greater-than {
     position: absolute;
@@ -160,3 +142,4 @@
     transform: translateY(-50%);
     font-size: 2em;
 }
+@keyframes logo-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import Header from './Header.jsx';
+import Header from './Header';
 import Footer from './Footer';
+import './Style/login.css';
 import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../../Contexts/Actions/user-fetch'; // Assuming user.js is in the same directory
+import { loginUser} from '../../Contexts/Actions/user-fetch'; // Assuming user.js is in the same directory
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -33,30 +34,30 @@ function Login() {
   };
 
   return (
-
-    <>
-    <Header />
-
-
-    <div>
-      <h1>Login Page</h1>
-      {error && <p>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username:
-          <input type="text" value={username} onChange={e => setUsername(e.target.value)} />
-        </label>
-        <label>
-          Password:
-          <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
-        </label>
-        <button type="submit">Login</button>
-      </form>
-      <button type="button" onClick={goToRegister}>Go to Register</button>
+    <div className="page-container">
+      <div className="content-wrapper">
+        <Header />
+  
+        <div>
+          <h1>Login Page</h1>
+          {error && <p>{error}</p>}
+          <form onSubmit={handleSubmit}>
+            <label>
+              Username:
+              <input type="text" value={username} onChange={e => setUsername(e.target.value)} />
+            </label>
+            <label>
+              Password:
+              <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+            </label>
+            <button className="btn" type="submit">Login</button>
+          </form>
+          <button className="btn" type="button" onClick={goToRegister}>Go to Register</button>
+        </div>
+      </div>
+     
+      <Footer />
     </div>
-
-    <Footer />
-    </>
   );
 }
 

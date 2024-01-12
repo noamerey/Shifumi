@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { registerUser } from '../../Contexts/Actions/user-fetch'; // Assuming user.js is in the same directory
 import Header from './Header.jsx';
 import Footer from './Footer.jsx';
+import './Style/login.css';
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -28,10 +29,9 @@ function Register() {
   };
 
   return (
-
-    <>
-    <Header />
-    <div>
+    <div className="page-container">
+      <Header />
+      <div className="content-wrap">
       <h1>Register Page</h1>
       {errorMessage && <p>{errorMessage}</p>}
       {accountCreated ? (
@@ -50,12 +50,12 @@ function Register() {
             Confirm Password:
             <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
           </label>
-          <button type="submit">Register</button>
+          <button type="submit" className="btn">Register</button> 
         </form>
       )}
     </div>
     <Footer />
-    </>
+    </div>
   );
 }
 
