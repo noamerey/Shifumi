@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Header from './Header';
+import Footer from './Footer';
+import './Style/login.css';
+
+
 
 function Match() {
   const [matches, setMatches] = useState([]);
@@ -28,7 +33,7 @@ function Match() {
       }
     })
       .then(response => {
-        // Add new match to the list of matches
+
         setMatches([...matches, response.data]);
       })
       .catch(error => {
@@ -43,26 +48,29 @@ function Match() {
   };
 
   return (
-    <div>
-      <h1>Matches</h1>
-      {matches.map(match => (
-        <div key={match._id}>
-          <p>User 1: {match.user1.username}</p>
-          <p>User 2: {match.user2 ? match.user2.username : 'N/A'}</p>
-        </div>
-      ))}
+    <div className="page-container">
+      <Header />
+      <div className="content-wrap">
+        <h1>Matches</h1>
+        {matches.map(match => (
+          <div key={match._id}>
+            <p>User 1: {match.user1.username}</p>
+            <p>User 2: {match.user2 ? match.user2.username : 'N/A'}</p>
+          </div>
+        ))}
 
-      <h2>Create a new match</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          User 1:
-          <input type="text" name="user1" onChange={e => setNewMatch({ ...newMatch, user1: e.target.value })} />
-        </label>
-        <button type="submit">Create</button>
-        <button onClick={handleLogout}>Déconnexion</button>
-      </form>
+        <h2>Create a new match</h2>
+        <form onSubmit={handleSubmit}>
+          <label>
+            User 1:
+            <input type="text" name="user1" onChange={e => setNewMatch({ ...newMatch, user1: e.target.value })} />
+          </label>
+          <button type="submit" className="btn">Create</button> {/* Apply the login-button class */}
+          <button onClick={handleLogout} className="btn">Déconnexion</button> {/* Apply the login-button class */}
+        </form>
+      </div>
+      <Footer />
     </div>
   );
 }
-
 export default Match;

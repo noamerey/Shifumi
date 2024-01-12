@@ -1,4 +1,3 @@
-// HomePage.jsx
 import React from 'react';
 import Header from './Header.jsx';
 import Footer from './Footer.jsx';
@@ -9,9 +8,9 @@ import '../Stylehomepage/HomePage.css';
 
 export default function HomePage() {
     const gameRules = [
-        { logo: feu, title: 'Feu', description: 'Le feu bat la plante' },
-        { logo: eau, title: 'Eau', description: 'l\'eau bat le feu' },
-        { logo: plante, title: 'Plante', description: 'la plante bat l\'eau' },
+        { logo: feu, title: 'Feu', description: 'Le feu bat la plante' , wikiLink: 'https://www.pokepedia.fr/Salam%C3%A8che' },
+        { logo: eau, title: 'Eau', description: 'l\'eau bat le feu', wikiLink: 'https://www.pokepedia.fr/Carapuce' },     
+        { logo: plante, title: 'Plante', description: 'la plante bat l\'eau', wikiLink: 'https://www.pokepedia.fr/Bulbizarre' },
     ];
 
     return (
@@ -21,7 +20,9 @@ export default function HomePage() {
             <div className='main-content'>
                 <div className='logo-chifoumi'>
                     {gameRules.map((rule, index) => (
-                        <img className={`logo logo${index}`} src={rule.logo} alt={rule.title} />
+                        <a href={rule.wikiLink} target="_blank" rel="noopener noreferrer">
+                          <img className={`logo${index}`} src={rule.logo} alt={rule.title} />
+                        </a>
                     ))}
                 </div>
 
