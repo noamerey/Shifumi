@@ -47,4 +47,20 @@ export default {
         body: JSON.stringify(newMatch),
       }).then((res) => res.json());
     },
+    join: async function (matchId, playerId) {
+        const token = localStorage.getItem("userToken");
+        const response = await fetch(`http://fauques.freeboxos.fr:3000/matches/${matchId}/join`, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
+          body: JSON.stringify({ playerId }),
+        });
+      
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+      
+        return response.json();
+      },
   };

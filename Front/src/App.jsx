@@ -5,6 +5,7 @@ import HomePage from './Pages/Components/HomePage';
 import Login from './Pages/Components/login';
 import CreateAccount from './Pages/Components/CreateAccount';
 import Match from './Pages/Components/Match';
+import Game from './Pages/Components/Game';
 
 function App() {
   const [username, setUsername] = useState('');
@@ -27,6 +28,7 @@ function App() {
           <Route path="/login" element={<Login setUsername={setUsername}/>}/>
           <Route path="/register" element={<CreateAccount/>}/>
           <Route path="/matchlist" element={<PrivateRoute><Match/></PrivateRoute>}/>
+          <Route path="/match/:id" element={<PrivateRoute><Game/></PrivateRoute>}/>
         </Routes>
       </div>
     </Router>

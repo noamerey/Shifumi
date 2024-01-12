@@ -16,20 +16,16 @@ function Match() {
     navigate(`/match/${id}`);
   };
 
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      if (matchId) {
-        const response = await fetch(`http://fauques.freeboxos.fr:3000/matches/${matchId}`);
-        const data = await response.json();
-        if (data.user2) {
-          setMatches(prevMatches => [...prevMatches, data]);
-          clearInterval(interval);
-        }
-      }
-    }, 5000); // Check every 5 seconds
-
-    return () => clearInterval(interval); // Clean up on unmount
-  }, [matchId]);
+  const joinMatch = async () => {
+    const match = matches.find(match => match.user2 === null);
+    if (match) {
+      await matchlist.join(match._id);
+      setMatchId(match._id);
+      navigate(`/match/${match._id}`);
+    } else {
+      createMatch();
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('userToken');
@@ -37,25 +33,26 @@ function Match() {
     navigate('/login');
   };
 
+  useEffect(() => {
+    const getMatches = async () => {
+      const data = await matchlist.fetch();
+      setMatches(data);
+    };
+
+    getMatches();
+  }, []);
+
   return (
     <div className="page-container">
-      <Header />
-      <div className="content-wrap">
-        <h1>Matches</h1>
-        {matches.map(match => (
-          <div key={match._id}>
-            <p>User 1: {match.user1.username}</p>
-            <p>User 2: {match.user2 ? match.user2.username : 'N/A'}</p>
-          </div>
-        ))}
-
-        <h2>Create a new match</h2>
-        <button onClick={createMatch}>Start Match</button>
-        <button onClick={handleLogout} className="btn">Déconnexion</button>
+      <div className="content-wrapper">
+        <Header />
+        <h1>Match List</h1>
+        <button className='btn' type='button' onClick={joinMatch}>Rejoindre un match</button>
+        <button className="btn" type='button' onClick={handleLogout}>Se déconnecter</button>
       </div>
       <Footer />
     </div>
   );
-}
+};
 
 export default Match;
