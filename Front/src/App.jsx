@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import './App.css';
-import Login from './components/login';
-import CreateAccount from './components/CreateAccount';
-import Match from './components/Match';
+import Login from './Pages/Components/login';
+import CreateAccount from './Pages/Components/CreateAccount';
+import Match from './Pages/Components/Match';
 
 function App() {
   const [username, setUsername] = useState('');

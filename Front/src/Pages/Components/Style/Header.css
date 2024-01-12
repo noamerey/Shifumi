@@ -1,0 +1,26 @@
+.header{
+    display: flex;
+    justify-content: space-between;
+    background-color: rgb(0, 0, 0);
+    padding: 5px;
+    top: 0;
+    width: 101%;
+    z-index: 1000;
+}
+
+
+.logo {
+    width: 80px;  
+    height: 80px; 
+}
+
+.links, .connexion-box {
+    display: flex;
+    align-items: center; 
+    margin-right: 90px;
+    gap: 100px;
+}
+
+.logo:hover {
+    filter: drop-shadow(0 0 2em #ffffffaa);
+  }

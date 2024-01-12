@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { registerUser } from '../Contexts/Actions/user-fetch'; // Assuming user.js is in the same directory
+import { registerUser } from '../../Contexts/Actions/user-fetch'; // Assuming user.js is in the same directory
 
 function Register() {
   const [username, setUsername] = useState('');
