@@ -3,12 +3,14 @@ import axios from 'axios';
 import Header from './Header';
 import Footer from './Footer';
 import './Style/login.css';
+import { useNavigate } from 'react-router-dom';
 
 
 
 function Match() {
   const [matches, setMatches] = useState([]);
   const [newMatch, setNewMatch] = useState({});
+  const navigate = useNavigate();
 
   // Fetch matches when component mounts
   useEffect(() => {
