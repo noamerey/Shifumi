@@ -1,47 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Header from './Header';
-import Footer from './Footer';
-import './Style/login.css';
+import matchlist from '../../Contexts/Actions/matchlist';
 import { useNavigate } from 'react-router-dom';
-
-
+import Header from './Header';
+import './Style/login.css';
+import Footer from './Footer';
 
 function Match() {
+  const [matchId, setMatchId] = useState(null);
   const [matches, setMatches] = useState([]);
-  const [newMatch, setNewMatch] = useState({});
   const navigate = useNavigate();
 
-  // Fetch matches when component mounts
-  useEffect(() => {
-    axios.get('http://fauques.freeboxos.fr:3000/matches')
-      .then(response => {
-        setMatches(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error!', error);
-      });
-  }, []);
-
-  // Function to handle form submission
-  const handleSubmit = event => {
-    event.preventDefault();
-  
-    const userToken = localStorage.getItem('userToken');
-  
-    axios.post('http://fauques.freeboxos.fr:3000/matches', newMatch, {
-      headers: {
-        Authorization: `Bearer ${userToken}`
-      }
-    })
-      .then(response => {
-
-        setMatches([...matches, response.data]);
-      })
-      .catch(error => {
-        console.error('There was an error!', error);
-      });
+  const createMatch = async () => {
+    const id = await matchlist.add();
+    setMatchId(id);
+    navigate(`/match/${id}`);
   };
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (matchId) {
+        const response = await fetch(`http://fauques.freeboxos.fr:3000/matches/${matchId}`);
+        const data = await response.json();
+        if (data.user2) {
+          setMatches(prevMatches => [...prevMatches, data]);
+          clearInterval(interval);
+        }
+      }
+    }, 5000); // Check every 5 seconds
+
+    return () => clearInterval(interval); // Clean up on unmount
+  }, [matchId]);
 
   const handleLogout = () => {
     localStorage.removeItem('userToken');
@@ -62,17 +50,12 @@ function Match() {
         ))}
 
         <h2>Create a new match</h2>
-        <form onSubmit={handleSubmit}>
-          <label>
-            User 1:
-            <input type="text" name="user1" onChange={e => setNewMatch({ ...newMatch, user1: e.target.value })} />
-          </label>
-          <button type="submit" className="btn">Create</button> {/* Apply the login-button class */}
-          <button onClick={handleLogout} className="btn">Déconnexion</button> {/* Apply the login-button class */}
-        </form>
+        <button onClick={createMatch}>Start Match</button>
+        <button onClick={handleLogout} className="btn">Déconnexion</button>
       </div>
       <Footer />
     </div>
   );
 }
+
 export default Match;
