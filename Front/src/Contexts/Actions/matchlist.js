@@ -10,9 +10,9 @@ export default {
         },
       }).then((res) => res.json());
     },
-    delete: async function (match) {
+    delete: async function (id) {
         const token = localStorage.getItem("userToken");
-      return fetch("http://fauques.freeboxos.fr:3000/matches/" + match.id, {
+      return fetch("http://fauques.freeboxos.fr:3000/matches/" + id, {
         method: "DELETE",
         headers: {
           //"Content-Type": "application/json",

@@ -15,7 +15,6 @@ function Match() {
     const id = await matchlist.add();
     setMatchId(id);
     retrieveMatches();
-    navigate(`/matchi/${id}`);
   };
 
   const retrieveMatches = async () => {
@@ -44,9 +43,11 @@ function Match() {
         setMatchId(match._id);
         navigate(`/match/${match._id}`);
       }
-    } else {
-      createMatch();
-    }
+    } 
+  };
+
+  const joinAMatch = (id) => {
+    navigate(`/match/${id}`);
   };
 
   const handleLogout = () => {
@@ -77,9 +78,11 @@ function Match() {
             <p>Match ID: {match._id}</p>
             <p>User1: {match.user1.username}</p>
             <p>User2: {match.user2 ? match.user2.username : 'Waiting for player...'}</p>
+            <button className='btn' type='button' onClick={() => joinAMatch(match._id)}>Rejoindre</button>
           </div>
         ))}
-        <button className='btn' type='button' onClick={joinMatch}>Rejoindre un match</button>
+        <button className='btn' type='button' onClick={joinMatch}>Rejoindre le dernier match</button>
+        <button className='btn' type='button' onClick={createMatch}>Créer un match</button>
         <button className="btn" type='button' onClick={handleLogout}>Se déconnecter</button>
       </div>
       <Footer />
