@@ -1,0 +1,21 @@
+button:hover {
+    background-color: transparent;
+    border: none;
+  }
+  
+  button:nth-child(1):hover {
+    filter: drop-shadow(0 0 2em #fd0000aa);
+  }
+  
+  button:nth-child(2):hover {
+    filter: drop-shadow(0 0 2em #00c3ffaa);
+  }
+  
+  button:nth-child(3):hover {
+    filter: drop-shadow(0 0 2em #00ff00aa);
+  }
+
+button {
+    background-color: transparent;
+    border: none;
+}
