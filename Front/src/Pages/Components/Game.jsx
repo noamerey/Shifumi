@@ -35,9 +35,11 @@ function Game() {
   }
 
   return (
-    <div>
-      <Header />
-      <h1>{match.user1 ? match.user1.username : 'Loading...'} vs {match.user2 ? match.user2.username : 'Waiting for player...'}</h1>
+    <div className="page-container">
+      <div className="content-wrapper">
+        <Header />
+        <h1>{match.user1 ? match.user1.username : 'Loading...'} vs {match.user2 ? match.user2.username : 'Waiting for player...'}</h1>
+      </div>
       <Footer />
     </div>
   );

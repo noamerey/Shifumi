@@ -16,6 +16,20 @@ function Match() {
     navigate(`/match/${id}`);
   };
 
+  const retrieveMatches = async () => {
+    fetch('http://fauques.freeboxos.fr:3000/matches',{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('userToken')}`,
+      },
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      setMatches(data);
+    })
+    } 
+
   const joinMatch = async () => {
     const match = matches.find(match => match.user2 === null);
     if (match) {
