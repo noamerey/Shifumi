@@ -8,11 +8,13 @@ import Footer from './Footer';
 function Match() {
   const [matchId, setMatchId] = useState(null);
   const [matches, setMatches] = useState([]);
+  const [showMatches, setShowMatches] = useState(false);
   const navigate = useNavigate();
 
   const createMatch = async () => {
     const id = await matchlist.add();
     setMatchId(id);
+    retrieveMatches();
     navigate(`/match/${id}`);
   };
 
@@ -28,14 +30,20 @@ function Match() {
     .then((data) => {
       setMatches(data);
     })
-    } 
+  } 
 
   const joinMatch = async () => {
-    const match = matches.find(match => match.user2 === null);
+    const currentUser = localStorage.getItem('username');
+    const match = matches.find(match => match.user2 === null || match.user1.username === currentUser || match.user2.username === currentUser);
     if (match) {
-      await matchlist.join(match._id);
-      setMatchId(match._id);
-      navigate(`/match/${match._id}`);
+      if (match.user1.username === currentUser || (match.user2 && match.user2.username === currentUser)) {
+        setMatchId(match._id);
+        navigate(`/match/${match._id}`);
+      } else {
+        await matchlist.join(match._id);
+        setMatchId(match._id);
+        navigate(`/match/${match._id}`);
+      }
     } else {
       createMatch();
     }
@@ -60,7 +68,17 @@ function Match() {
     <div className="page-container">
       <div className="content-wrapper">
         <Header />
-        <h1>Match List</h1>
+        <h1>Liste des matchs</h1>
+        <button className='btn' type='button' onClick={() => setShowMatches(!showMatches)}>
+          {showMatches ? 'Cacher les matchs' : 'Voir les matchs'}
+        </button>
+        {showMatches && matches.map(match => (
+          <div key={match._id}>
+            <p>Match ID: {match._id}</p>
+            <p>User1: {match.user1.username}</p>
+            <p>User2: {match.user2 ? match.user2.username : 'Waiting for player...'}</p>
+          </div>
+        ))}
         <button className='btn' type='button' onClick={joinMatch}>Rejoindre un match</button>
         <button className="btn" type='button' onClick={handleLogout}>Se déconnecter</button>
       </div>
