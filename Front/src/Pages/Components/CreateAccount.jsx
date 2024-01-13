@@ -32,25 +32,25 @@ function Register() {
     <div className="page-container">
       <Header />
       <div className="content-wrap">
-      <h1>Register Page</h1>
+      <h1>Création de compte</h1>
       {errorMessage && <p>{errorMessage}</p>}
       {accountCreated ? (
         <p>Compte créé, <Link to="/login">voulez-vous vous connecter ?</Link></p>
       ) : (
         <form onSubmit={handleSubmit}>
           <label>
-            Username:
+            Pseudo:
             <input type="text" value={username} onChange={e => setUsername(e.target.value)} />
           </label>
           <label>
-            Password:
+            Mot de passe:
             <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
           </label>
           <label>
-            Confirm Password:
+            Confirmation de mot de passe:
             <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
           </label>
-          <button type="submit" className="btn">Register</button> 
+          <button type="submit" className="btn">Créer le compte</button> 
         </form>
       )}
     </div>

@@ -37,20 +37,20 @@ function Login() {
         <Header />
   
         <div>
-          <h1>Login Page</h1>
+          <h1>Connexion</h1>
           {error && <p>{error}</p>}
           <form onSubmit={handleSubmit}>
             <label>
-              Username:
+              Pseudo:
               <input type="text" value={username} onChange={e => setUsername(e.target.value)} />
             </label>
             <label>
-              Password:
+              Mot de passe:
               <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
             </label>
             <button className="btn" type="submit">Login</button>
           </form>
-          <button className="btn" type="button" onClick={goToRegister}>Go to Register</button>
+          <button className="btn" type="button" onClick={goToRegister}>Pas de compte ? Créés en un !</button>
         </div>
       </div>
      
