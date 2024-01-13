@@ -4,7 +4,11 @@ import './Style/login.css';
 import Header from './Header';
 import Footer from './Footer';
 import matchlist from '../../Contexts/Actions/matchlist';
-import GameItem from './GameItem';
+import GameItem, { TopImages } from './GameItem';
+import background from '../../assets/Terrain.jpg';
+import feu from '../../assets/Salameche.png';
+import eau from '../../assets/Carapuce.png';
+import plante from '../../assets/Bulbizarre.png';
 
 function Game() {
   const { id } = useParams();
@@ -92,12 +96,25 @@ function Game() {
   }
 
   return (
-    <div className="page-container">
-      <div className="content-wrapper">
+    <div className="page-container" style={{ 
+      backgroundImage: `url(${background})`, 
+      backgroundSize: 'cover', 
+      backgroundPosition: 'center', 
+      height: '140vh', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      justifyContent: 'flex-end', 
+      alignItems: 'center' 
+    }}>
+      <div className="content-wrapper" style={{
+        justifyContent: 'flex-end', 
+        alignItems: 'center' 
+      }}>
         <Header />
         <h1>{match && match.user1 ? match.user1.username : 'Loading...'} vs {match && match.user2 ? match.user2.username : 'Waiting for player...'}</h1>
-        <GameItem onChoice={handleMove} />
+        <TopImages />
       </div>
+      <GameItem onChoice={handleMove} />
       <Footer />
     </div>
   );
