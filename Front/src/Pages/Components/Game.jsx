@@ -11,6 +11,7 @@ import eau from '../../assets/Carapuce.png';
 import plante from '../../assets/Bulbizarre.png';
 import { useNavigate } from 'react-router-dom';
 import EventSource from 'eventsource-polyfill';
+import { Link } from 'react-router-dom';
 
 function Game() {
   const { id } = useParams();
@@ -23,6 +24,8 @@ function Game() {
   const [action, setAction] = useState(null);
   const [score, setScore] = useState({ user1: 0, user2: 0 });
   const navigate = useNavigate();
+  const [user1Move, setUser1Move] = useState(null);
+  const [user2Move, setUser2Move] = useState(null);
 
   const endMatch = async () => {
     navigate('/matchlist');
@@ -30,36 +33,45 @@ function Game() {
 
   const handleEvent = (event) => {
     const data = JSON.parse(event.data);
-    switch (data.type) {
-      case 'PLAYER1_JOIN':
-      case 'PLAYER2_JOIN':
-        setAction(`${data.payload.user} a rejoint la partie`);
-        break;
-      case 'NEW_TURN':
-        setAction(`Tour ${data.payload.turnId} commence`);
-        break;
+    console.log('Event received:', data); // Log the event data for debugging purposes
+    data.forEach(event => {
+      switch (event.type) {
+        case 'PLAYER1_JOIN':
+        case 'PLAYER2_JOIN':
+          setAction(`${event.payload.user} a rejoint la partie`);
+          break;
+        case 'NEW_TURN':
+          setAction(`Tour ${event.payload.turnId} commence`);
+          break;
         case 'TURN_ENDED':
-          setAction(`Tour ${data.payload.newTurnId} a terminé, ${data.payload.winner === 'draw' ? 'égalité' : `${data.payload.winner} a gagné`}`);
-          if (data.payload.winner !== 'draw') {
+          console.log('TURN_ENDED event received:', event); // Log the entire event data for debugging purposes
+          setAction(`Tour ${event.payload.newTurnId} a terminé, ${event.payload.winner === 'draw' ? 'égalité' : `${event.payload.winner} a gagné`}`);
+          if (event.payload.winner !== 'draw') {
             setScore(prevScore => ({
               ...prevScore,
-              [data.payload.winner]: prevScore[data.payload.winner] + 1
+              [event.payload.winner]: prevScore[event.payload.winner] + 1
             }));
           }
           break;
-      case 'PLAYER1_MOVED':
-      case 'PLAYER2_MOVED':
-        setAction(`Le joueur a bougé au tour ${data.payload.turn}`);
-        break;
-      case 'MATCH_ENDED':
-        setAction(`Le match a terminé, ${data.payload.winner === 'draw' ? 'égalité' : `${data.payload.winner} a gagné`}`);
-        break;
-      default:
-        setAction(null);
-    }
-    // Update the match state with the new data
-    setMatch(data);
+        case 'PLAYER1_MOVED':
+          setUser1Move(event.payload.move);
+          setAction(`Le joueur 1 a choisi ${event.payload.move}`);
+          break;
+        case 'PLAYER2_MOVED':
+          setUser2Move(event.payload.move);
+          setAction(`Le joueur 2 a choisi ${event.payload.move}`);
+          break;
+        case 'MATCH_ENDED':
+          setAction(`Le match a terminé, ${event.payload.winner === 'draw' ? 'égalité' : `${event.payload.winner} a gagné`}`);
+          break;
+        default:
+          setAction(null);
+      }
+      // Update the match state with the new data
+      setMatch(event);
+    });
   };
+
 
   useEffect(() => {
     retrieveMatch();
@@ -67,10 +79,11 @@ function Game() {
     const token = localStorage.getItem('userToken');
     const headers = { Authorization: `Bearer ${token}` };
   
-    const eventSource = new EventSource(`http://fauques.freeboxos.fr:3000/matches/${id}/subscribe`, { headers });
+    const eventSource = new EventSource(`http://fauques.freeboxos.fr:3000/matches/${id}/subscribe?token=${encodeURIComponent(token)}`);
   
     eventSource.onmessage = handleEvent;
-    eventSource.onerror = () => {
+    eventSource.onerror = (error) => {
+      console.log('EventSource encountered an error:', error);
       if (eventSource) {
         eventSource.close();
       }
@@ -171,9 +184,14 @@ function Game() {
         alignItems: 'center' 
       }}>
         <Header />
+        <Link to="/matchlist">
+          <button>Quit Match</button>
+        </Link>
         <h1>{match && match.user1 ? match.user1.username : 'Loading...'} vs {match && match.user2 ? match.user2.username : 'Waiting for player...'}</h1>
         <p>Score: {score.user1} - {score.user2}</p>
         <p>{action}</p>
+        <p>Joueur 1 a choisi : {user1Move}</p>
+        <p>Joueur 2 a choisi : {user2Move}</p>
         {match && match.status === 'MATCH_ENDED' && (
           <button onClick={endMatch}>Retourner au menu</button>
         )}
