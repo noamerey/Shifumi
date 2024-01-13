@@ -15,7 +15,7 @@ function Match() {
     const id = await matchlist.add();
     setMatchId(id);
     retrieveMatches();
-    navigate(`/match/${id}`);
+    navigate(`/matchi/${id}`);
   };
 
   const retrieveMatches = async () => {

@@ -1,48 +1,106 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import './Style/login.css';
 import Header from './Header';
 import Footer from './Footer';
 import matchlist from '../../Contexts/Actions/matchlist';
+import GameItem from './GameItem';
 
 function Game() {
   const { id } = useParams();
   const [match, setMatch] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const eventSource = useRef(null);
+  const [turnNumber, setTurnNumber] = useState(1);
+  const [move, setMove] = useState(null);
 
-  useEffect(() => {
-    const fetchMatch = async () => {
-      try {
-        const data = await matchlist.fetch(`${id}`);
-        setMatch(data);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
+  const retrieveMatch = async () => {
+    fetch(`http://fauques.freeboxos.fr:3000/matches/${id}`,{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('userToken')}`,
+      },
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      setMatch(data);
+      if (data.user2) {
         setLoading(false);
       }
-    };
-  
-    fetchMatch();
-  }, [id]);
-
-  if (loading) {
-    return <div>Loading...</div>;
+    })
+    .catch((error) => {
+      setError(error);
+    });
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
+  const handleMove = async (move) => {
+    setMove(move);
+    // Send the move to the server
+    console.log(localStorage.getItem('userToken'));
+    const response = await fetch(`http://fauques.freeboxos.fr:3000/matches/${id}/turns/${turnNumber}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('userToken')}`,
+      },
+      body: JSON.stringify({ move }),
+    });
+  
+    if (response.status === 400) {
+      const errorData = await response.json();
+      if (errorData.turn === 'not found') {
+        // Handle 'turn not found' error
+        console.log('Turn not found');
+      } else if (errorData.turn === 'not last') {
+        // Handle 'turn not last' error
+        console.log('Turn not last');
+      } else if (errorData.match === 'Match already finished') {
+        // Handle 'Match already finished' error
+        console.log('Match already finished');
+      } else if (errorData.user === 'move already given') {
+        // Handle 'move already given' error
+        console.log('Move already given');
+      }
+    } else if (response.status === 202) {
+      // Handle successful move
+      setTurnNumber(turnNumber + 1);
+    }
+  }
+
+  useEffect(() => {
+    retrieveMatch();
+
+    // Subscribe to match notifications
+    eventSource.current = new EventSource(`http://fauques.freeboxos.fr:3000/matches/${id}/subscribe`);
+    eventSource.current.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      // Update the match state with the new data
+      setMatch(data);
+    };
+
+    return () => {
+      if (eventSource.current) {
+        eventSource.current.close();
+      }
+    };
+  }, []);
+
+  if (loading) {
+    return <div>Waiting for player...</div>;
   }
 
   return (
     <div className="page-container">
       <div className="content-wrapper">
         <Header />
-        <h1>{match.user1 ? match.user1.username : 'Loading...'} vs {match.user2 ? match.user2.username : 'Waiting for player...'}</h1>
+        <h1>{match && match.user1 ? match.user1.username : 'Loading...'} vs {match && match.user2 ? match.user2.username : 'Waiting for player...'}</h1>
+        <GameItem onChoice={handleMove} />
       </div>
       <Footer />
     </div>
   );
-};
+}
 
 export default Game;
