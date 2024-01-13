@@ -77,10 +77,9 @@ function Game() {
     retrieveMatch();
   
     const token = localStorage.getItem('userToken');
-    const headers = { Authorization: `Bearer ${token}` };
-  
     const eventSource = new EventSource(`http://fauques.freeboxos.fr:3000/matches/${id}/subscribe?token=${encodeURIComponent(token)}`);
-  
+    
+    console.log('EventSource created:', eventSource); // Log the event source for debugging purposes
     eventSource.onmessage = handleEvent;
     eventSource.onerror = (error) => {
       console.log('EventSource encountered an error:', error);
